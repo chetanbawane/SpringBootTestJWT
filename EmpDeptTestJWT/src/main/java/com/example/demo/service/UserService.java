@@ -1,14 +1,14 @@
 package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import com.example.demo.entity.MyUserDtails;
 import com.example.demo.entity.User;
@@ -21,7 +21,11 @@ public class UserService implements UserDetailsService {
 	private UserRepos userRepos;
 	
 	@Autowired
+	@Lazy
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JWTService jwtService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,14 +44,14 @@ public class UserService implements UserDetailsService {
 		
 	}
 	
-//	public String verify(User user) {
-//		Authentication authentication=
-//				(Authentication) authenticationManager.
-//		  authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-//		
-//		if(authentication.isAuthenticated())
-//			return "success";
-//					
-//					return "failed";
-//	}
+	public String verify(User user) {
+		Authentication authentication=
+				 authenticationManager.
+  authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+		
+		if(authentication.isAuthenticated())
+			return jwtService.generateToken(user.getUsername());
+					
+					return "failed";
+	}
 }
