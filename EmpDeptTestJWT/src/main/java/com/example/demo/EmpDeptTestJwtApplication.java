@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @SpringBootApplication
-@EnableWebSecurity
 @ComponentScan(basePackages = "com.example.demo.*")
 public class EmpDeptTestJwtApplication {
 
